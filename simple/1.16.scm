@@ -1,6 +1,6 @@
 (define (fast-expt b n a)
-  (if (= n 1)
-      (* b a)
+  (if (= n 0) 
+      a
       (fast-expt (square b) (quotient n 2) (if (even? n) a (* a b)))
       )
   )
