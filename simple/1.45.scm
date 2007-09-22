@@ -8,33 +8,18 @@
           (try next))))
   (try first-guess))
 
-(define (root-transform y n)
-  (lambda (x) (/ y (expt x (- n 1)))))
+(define (root-newton f guess epsilon)
+  (define (newton-transform f)
+    (lambda (x) (- x (/ (f x) 
+                        ((deriv f) x)))))
+  (fixed-point (newton-transform f) guess epsilon))
 
-(define (average-damp f)
-  (lambda (x) (/ (+ x (f x)) 2)))
+(define (deriv f)
+  (let ((dx 0.001))
+    (lambda (x)
+      (/ (- (f (+ x dx)) (f x)) dx))))
 
-(define (times f n)
-  (define (compose f g)
-    (lambda (x) (f (g x))))
-  (define (compose-step g k)
-    (if (= k 1)
-        g
-        (compose-step (compose f g) (- k 1))))
-  (compose-step f n))
-
-(define (average-damp-times f n)
-  (times (average-damp f) n))
-
-;; Double average damping seems to produce good results with finding
-;; roots up to 10th:
-;;
-;; (fixed-point (average-damp-times (root-transform 9765625.0 10) 2) 1 0.001)
-;; --> 4.481551
-;;
-;; Actually, $5^10 = 9765625$. Changed eps in fixed-point call led to
-;; unpredictable results (fails to converge).
-
-(define (root-fp y n)
-  (fixed-point 
-   (average-damp-times (root-transform y n) n) 1 0.001))
+(define (root y n)
+  (let ((root-equation
+         (lambda (x) (- y (expt x n)))))
+    (root-newton root-equation 1 0.001)))
