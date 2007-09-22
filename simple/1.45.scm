@@ -25,3 +25,16 @@
 
 (define (average-damp-times f n)
   (times (average-damp f) n))
+
+;; Double average damping seems to produce good results with finding
+;; roots up to 10th:
+;;
+;; (fixed-point (average-damp-times (root-transform 9765625.0 10) 2) 1 0.001)
+;; --> 4.481551
+;;
+;; Actually, $5^10 = 9765625$. Changed eps in fixed-point call led to
+;; unpredictable results (fails to converge).
+
+(define (root-fp y n)
+  (fixed-point 
+   (average-damp-times (root-transform y n) n) 1 0.001))
