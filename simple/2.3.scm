@@ -54,9 +54,9 @@
 ;; Produce a rectangle using two of its ortogonal sides
 (define (make-rectangle a b)
   ;; Check if sides are ortogonal
-  (if (and (= (scalar-mult (vectorize a) (vectorize b))))
-      (cons a b)
+  (if (and (= (scalar-mult (vectorize a) (vectorize b)) 0))
       0
+      (cons a b)
       ))
 
 (define (a-side rect) (car rect))
