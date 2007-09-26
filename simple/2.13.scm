@@ -38,6 +38,15 @@
     (make-interval (min p1 p2 p3 p4)
                    (max p1 p2 p3 p4))))
 
+;; Consider following interval multiplication (we ignore signs at
+;; interval radius dX and dY):
+;; 
+;; $(X + dX)(Y + dY) = XY + YdX + XdY + dX dY$ and as $dX \rightarrow
+;; 0, dY \rightarrow 0$ it is approximately equal to $XY + YdX + XdY$.
+;;
+;; $X$ is interval center (median value) and $dX$ is its radius, thus
+;; we may write the following procedure.
 (define (mult-interval-approx p q)
   (make-center-radius (* (center p) (center q))
-                      (* (radius p) (radius q))))
+                      (+ (* (radius p) (center q))
+                         (* (radius q) (center p)))))

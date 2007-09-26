@@ -28,7 +28,7 @@
      (/ 1.0 (lower-bound p))))
   (if (crosses-zero? q)
        (error "Attempt to divide by interval crossing zero")
-       (mult-interval p (inv-interval q)))))
+       (mult-interval p (inv-interval q))))
 
 (define (sub-interval p q)
   (make-interval (- (upper-bound p) (upper-bound q))
