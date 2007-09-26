@@ -58,7 +58,7 @@
 ;; Rectangles presented by two ortogonal sides
 (define (make-rect-ort a b)
   ;; Check if sides are ortogonal
-  ;; Check whether given segments cross at ends is not performed
+  ;; Check whether given segments cross at ends is *not* performed
   (if (and (= (scalar-mult (vectorize a) (vectorize b)) 0))
       0
       (cons a b)))
