@@ -1,13 +1,13 @@
 ;; Using high order filtering function. Beware of recursion.
-(define (filter-list-recursive filter l)
-  (if (null? l)
-      l
-      (append (if (filter (car l))
-                  (list (car l))
+(define (filter-list-recursive predicate items)
+  (if (null? items)
+      items
+      (append (if (predicate (car items))
+                  (list (car items))
                   (list))
-              (filter-list filter (cdr l)))))
+              (filter-list-recursive predicate (cdr items)))))
 
-(define (same-parity-highorder . l)
+(define (same-parity-highorder . items)
   (define (same-parity? x)
-    (= (remainder (car l) 2) (remainder x 2)))
-  (filter-list-recursive same-parity? l))
+    (= (remainder (car items) 2) (remainder x 2)))
+  (filter-list-recursive same-parity? items))
