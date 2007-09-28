@@ -1,0 +1,48 @@
+\documentclass{article}
+\begin{document}
+
+Consider the following two formullas which are algebraically equal:
+
+\begin{equation}
+  \label{eq:1}
+  R = \frac{R_1 R_2}{R_1 + R_2}
+\end{equation}
+
+and
+
+\begin{equation}
+  \label{eq:2}
+  R = \frac{1}{1/R_1 + 1/R_2}
+\end{equation}
+
+Using the latter one, though, provides more precise result (meaning
+resulting interval radius is smaller). The proof follows.
+
+Let $R_1 = [a; b]$ and $R_2 = [c; d]$. $a > 0$ and $c > 0$ as
+resistance is a positive value.
+
+According to definition of {\tt (div-interval)}, using the formulae
+\ref{eq:1} results in the following evaluations:
+
+$$P = \frac{[a; b] [c; d]}{[a; b] + [c; d]} = \frac{[ac; bd]}{[a+c; b+d]}
+= [ac; bd ] [\frac{1}{b+d}; \frac{1}{a+c}] = [\frac{ac}{b+d};
+\frac{bd}{a+c}]$$
+
+On the other hand, using \ref{eq:2} gives:
+
+$$Q = \frac{1}{\frac{1}{[a; b]} + \frac{1}{[c; d]}} =
+\frac{1}{[\frac{1}{b}; \frac{1}{a}] + [\frac{1}{d}; \frac{1}{c}]} =
+\frac{1}{[\frac{1}{b} + \frac{1}{d}; \frac{1}{a} + \frac{1}{c}]} =
+\frac{1}{[\frac{b+d}{bd}; \frac{a+c}{ac}]} = [\frac{ac}{a+c};
+\frac{bd}{b+d}]$$
+
+By definition, $M = [a; b]$ interval radius $\rho_M = (b - a)/2$.
+
+As $b > a$ and $d > c$, $b + d > a + c$, so $\frac{ac}{b+d} <
+\frac{ac}{a+c}$ and $\frac{bd}{a+c} > \frac{bd}{b+d}$, thus $\rho_P >
+\rho_Q$.  Q. e. d.
+
+That also explains why both formulas give good results when $\rho_p
+\rightarrow o(|P|),\ \rho_Q \rightarrow o(|Q|)$.
+
+\end{document}
