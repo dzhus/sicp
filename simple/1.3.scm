@@ -1,11 +1,11 @@
-(define (max a b) (if (> a b) a b))
-(define (min a b) (if (< a b) a b))
+(define (square x) (* x x))
+(define (sum-of-squares x y) (+ (square x) (square y)))
 
-(define (fun a b c)
-  (+
-   (sqr (max a b))
-   (sqr (cond ((> c (max a b)) c)
-              (else (if (> c (min a b)) c (min a b)))
-              ))
-   )
-  )
+(define (sum-squares-of-max a b c)
+  (sum-of-squares
+   (if (> a b) a b)
+   (cond 
+    ((> c b) c)
+    ((> c a) c)
+    ((> a b) b)
+    (else a))))
