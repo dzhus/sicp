@@ -36,6 +36,7 @@
 (define (add-position position board)
   (append board (list position)))
 
+;; Return a subboard of one column
 (define (from-column column board)
   (filter (lambda (position)
             (= (get-column position)
@@ -47,6 +48,34 @@
             (= (get-row position)
                row))
           board))
+
+;; Return sides (width, height) of a minimum rectangle surrounding all
+;; positions
+(define (board-dimensions board)
+  (fold (lambda (position bound)
+          (cons (max (get-row position)
+                     (get-row bound))
+                (max (get-column position)
+                     (get-column bound))))
+        (cons 1 1)
+        board))
+
+(define (print-board board)
+  (let ((size (board-dimensions board)))
+    (let ((width (car size))
+          (height (cdr size)))
+      (for-each
+       (lambda (current)
+         (let ((row-positions (from-row current board)))
+           (for-each
+            (lambda (current-column)
+              (if (not
+                   (null? (from-column current-column row-positions)))
+                  (display "*")
+                  (display ".")))              
+            (enumerate-n width)))
+         (newline))
+       (enumerate-n height)))))
 
 (define (first-from-column column board)
   (car (from-column column board)))
