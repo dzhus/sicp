@@ -1,3 +1,5 @@
+(use-modules (srfi srfi-1))
+
 (define (enumerate-n n)
   (define (enumerate-interval low high)
     (if (> low high)
@@ -17,25 +19,40 @@
   (fold append (list) (map proc seq)))
 
 (define (make-position row column)
-  (list row))
+  (cons row column))
 
 (define (get-row position)
-  position)
+  (car position))
+
+(define (get-column position)
+  (cdr position))
 
 (define (make-board . positions)
   positions)
 
+(define empty-board
+  (make-board))
+
 (define (add-position position board)
-  (append board position))
+  (append board (list position)))
 
 (define (from-column column board)
-  (list-ref board (- column 1)))
+  (filter (lambda (position)
+            (= (get-column position)
+               column))
+          board))
+
+(define (from-row row board)
+  (filter (lambda (position)
+            (= (get-row position)
+               row))
+          board))
 
 (define (first-from-column column board)
-  (from-column column board))
+  (car (from-column column board)))
 
 (define (column-safe? k board)
-  (accumulate
+  (fold-right
    and
    #t
    (let ((new-row (get-row
@@ -53,8 +70,6 @@
 (define (queens board-size)
   (define (adjoin-position new-row k rest-of-queens)
     (add-position (make-position new-row k) rest-of-queens))
-  (define empty-board
-    (list))
   (define (queen-cols k)
     (if (= k 0)
         (list empty-board)
@@ -67,7 +82,3 @@
                  (enumerate-n board-size)))
           (queen-cols (- k 1))))))
   (queen-cols board-size))
-
-(use-modules (srfi srfi-1))
-(let ((b 5))
-  (display (queens b)))
