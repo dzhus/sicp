@@ -65,8 +65,8 @@
     (let ((width (car size))
           (height (cdr size)))
       (for-each
-       (lambda (current)
-         (let ((row-positions (from-row current board)))
+       (lambda (current-row)
+         (let ((row-positions (from-row current-row board)))
            (for-each
             (lambda (current-column)
               (if (not
