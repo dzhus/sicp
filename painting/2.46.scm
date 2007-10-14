@@ -2,10 +2,10 @@
   (cons x y))
 
 (define (x-vect vect)
-  (car x))
+  (car vect))
 
 (define (y-vect vect)
-  (car y))
+  (cdr vect))
 
 (define (add-vect vect1 vect2)
   (make-vect
