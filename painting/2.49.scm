@@ -12,12 +12,17 @@
 
 (define (segments->painter segment-list)
   (lambda (frame)
-    (for-each
-     (lambda (segment)
-       (draw-line
-        ((frame-coord-map frame) (start-segment segment))
-        ((frame-coord-map frame) (end-segment segment))))
-       segment-list)))
+    (lambda (drawing)
+      (if (null? segment-list)
+          drawing
+          (((segments->painter (cdr segment-list))
+            frame)
+           ((draw-segment
+              (let ((segment (car segment-list)))
+                (make-segment
+                 ((frame-coord-map frame) (start-segment segment))
+                 ((frame-coord-map frame) (end-segment segment)))))
+             drawing))))))
 
 (define stroke-border
   (segments->painter
@@ -28,7 +33,7 @@
      (make-vect 0 1)
      (make-vect 0 0))))
 
-(define stroke-border
+(define draw-cross
   (segments->painter
    (list
     (make-segment (make-vect 0 0)
