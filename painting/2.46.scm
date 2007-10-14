@@ -1,6 +1,9 @@
 (define (make-vect x y)
   (cons x y))
 
+;; Redefine builtin to avoid confusion :-)
+(define make-vector make-vect)
+
 (define (x-vect vect)
   (car vect))
 

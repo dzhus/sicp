@@ -10,6 +10,7 @@
       (scale-vect (edge1 frame) (x-vect vector))
       (scale-vect (edge2 frame) (y-vect vector))))))
 
+;; Fun(ky)ctional painter production!
 (define (segments->painter segment-list)
   (lambda (frame)
     (lambda (drawing)
@@ -44,8 +45,11 @@
 (define rhombus
   (segments->painter
    (make-path
-    (make-vect 0 1/2)
-    (make-vect 1/2 0)
-    (make-vect 1 1/2)
-    (make-vect 1/2 1)
-    (make-vect 0 1/2))))
+    (make-vect 0 0.5)
+    (make-vect 0.5 0)
+    (make-vect 1 0.5)
+    (make-vect 0.5 1)
+    (make-vect 0 0.5))))
+
+;; Examples:
+;;
