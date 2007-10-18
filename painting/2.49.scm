@@ -1,6 +1,7 @@
 (load "2.46.scm")
 (load "2.47.scm")
 (load "2.48.scm")
+(load "cairo.scm")
 
 (define (frame-coord-map frame)
   (lambda (vector)
