@@ -17,8 +17,8 @@
 
 (define (sub-vect vect1 vect2)
   (make-vect
-   (+ (x-vect vect1) (x-vect vect2))
-   (+ (y-vect vect1) (y-vect vect2))))
+   (- (x-vect vect1) (x-vect vect2))
+   (- (y-vect vect1) (y-vect vect2))))
 
 (define (scale-vect vect s)
   (make-vect
