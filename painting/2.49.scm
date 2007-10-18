@@ -51,5 +51,10 @@
     (make-vect 0.5 1)
     (make-vect 0 0.5))))
 
-;; Examples:
-;;
+(define wave
+  (segments->painter
+   (make-path
+    (make-vect 0 0.75)
+    (make-vect 0.50 0.25)
+    (make-vect 0.75 0.75)
+    (make-vect 1 0.25))))
