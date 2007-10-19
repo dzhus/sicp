@@ -32,6 +32,12 @@
                      (make-vect 0 0)
                      (make-vect 1 1)))
 
+(define (flip-vert painter)
+  (transform-painter painter
+                     (make-vect 0 1)
+                     (make-vect 1 1)
+                     (make-vect 0 0)))
+
 (define (ccw-90 painter)
   (transform-painter painter
                      (make-vect 1 0)
