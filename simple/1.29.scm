@@ -16,5 +16,4 @@
   (* (/ h 3) (+ (f a)
                 (* 4 (sum f (next a) next-2 (prev-k b 1)))
                 (* 2 (sum f (next-2 a) next-2 (prev-k b 2)))
-                (f b)))
-)
+                (f b))))

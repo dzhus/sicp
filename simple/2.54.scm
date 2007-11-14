@@ -1,0 +1,7 @@
+(define (equal? a b)
+  (if (and (symbol? a) (symbol? b))
+      (eq? a b)
+      (or (and (eq? a '()) (eq? b '()))
+          (and (= (length a) (length b))
+               (equal? (car a) (car b))
+               (equal? (cdr a) (cdr b))))))
