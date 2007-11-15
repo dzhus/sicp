@@ -65,6 +65,28 @@
 
 (define (exponent e) (caddr e))
 
+(define (function-predicate name)
+  (lambda (expression)
+    (and (pair? expression)
+         (eq? (car expression) symbol))))
+
+(define (make-function name)
+  (lambda (expression)
+    (list name expression)))
+
+(define (function-argument expression)
+  (cadr expression))
+
+(define sin? (elem-fun-predicate 'sin))
+(define cos? (elem-fun-predicate 'cos))
+(define tan? (elem-fun-predicate 'tan))
+(define cot? (elem-fun-predicate 'cot))
+
+(define make-sin (make-function 'sin))
+(define make-cos (make-function 'cos))
+(define make-tan (make-function 'tan))
+(define make-cot (make-function 'cot))
+
 (define (deriv exp var)
   (cond ((number? exp) 0)
         ((variable? exp)
@@ -94,5 +116,29 @@
                         (make-exponentiation
                          (base exp) (- (exponent exp) 1)))
           (deriv (base exp) var)))
+        ;;@ $(\sin u)' = u' \cos u$
+        ((sin? exp)
+         (let ((arg (function-argument exp)))
+           (make-product
+            (make-cos arg)
+            (deriv arg var))))
+        ;;@ $(\cos u)' = -u' \sin u$
+        ((cos? exp)
+         (let ((arg (function-argument exp)))
+           (make-product
+            (make-product -1 (make-sin arg))
+            (deriv arg var))))
+        ;;@ $(\tan u)' = \frac{u'}{\cos^2 u}$
+        ((tan? exp)
+         (let ((arg (function-argument exp)))
+           (make-product
+            (deriv arg var)
+            (make-division 1 (make-exponentiation (make-cos arg) 2)))))
+        ;;@ $(\cot u)' = -\frac{u'}{\sin^2 u}$
+        ((cot? exp)
+         (let ((arg (function-argument exp)))
+         (make-product
+          (deriv arg var)
+          (make-division -1 (make-exponentiation (make-sin arg) 2)))))
         (else
          (error "Unknown expression type"))))
