@@ -6,35 +6,49 @@
 (define (=number? exp number)
   (and (number? exp) (= exp number)))
 
-(define (make-sum a b)
-  (cond ((=number? a 0) b)
-        ((=number? b 0) a)
-        ((and (number? a) (number? b)) (+ a b))
-        (else (list '+ a b))))
+(define (make-sum . args)
+  (if (= (length args) 2)
+      (let ((a (car args))
+            (b (cadr args)))
+        (cond ((=number? a 0) b)
+              ((=number? b 0) a)
+              ((and (number? a) (number? b)) (+ a b))
+              (else (list '+ a b))))
+      (append '(+) args)))
 
 (define (sum? x)
-  (and (pair? x) (eq? (car x) '+)))
+  (eq? (car x) '+))
 
 (define (addend s) (cadr s))
 
-(define (augend s) (caddr s))
+(define (augend s)
+  (if (= (length s) 3)
+      (caddr s)
+      (make-sum (caddr s) (cadddr s))))
 
 (define (make-subtraction a b)
   (make-sum a (make-product b -1)))
 
-(define (make-product a b)
-  (cond ((=number? a 1) b)
-        ((=number? b 1) a)
-        ((or (=number? a 0) (=number? b 0)) 0)
-        ((and (number? a) (number? b)) (* a b))
-        (else (list '* a b))))
+(define (make-product . args)
+  (if (= (length args) 2)
+      (let ((a (car args))
+            (b (cadr args)))
+        (cond ((=number? a 1) b)
+              ((=number? b 1) a)
+              ((or (=number? a 0) (=number? b 0)) 0)
+              ((and (number? a) (number? b)) (* a b))
+              (else (list '* a b))))
+      (append '(+) args)))
 
 (define (product? x)
-  (and (pair? x) (eq? (car x) '*)))
+  (eq? (car x) '*))
 
 (define (multiplier p) (cadr p))
 
-(define (multiplicand p) (caddr p))
+(define (multiplicand p)
+  (if (= (length p) 3)
+      (caddr p)
+      (make-product (caddr p) (cadddr p))))
 
 (define (make-division a b)
   (cond ((=number? b 1) a)
@@ -65,29 +79,6 @@
 
 (define (exponent e) (caddr e))
 
-(define (function-predicate name)
-  (lambda (expression)
-    (and (pair? expression)
-         (eq? (car expression) symbol))))
-
-(define (make-function name)
-  (lambda (expression)
-    (list name expression)))
-
-(define (function-argument expression)
-  (cadr expression))
-
-;; Trigonometric functions
-(define sin? (elem-fun-predicate 'sin))
-(define cos? (elem-fun-predicate 'cos))
-(define tan? (elem-fun-predicate 'tan))
-(define cot? (elem-fun-predicate 'cot))
-
-(define make-sin (make-function 'sin))
-(define make-cos (make-function 'cos))
-(define make-tan (make-function 'tan))
-(define make-cot (make-function 'cot))
-
 (define (deriv exp var)
   (cond ((number? exp) 0)
         ((variable? exp)
@@ -117,29 +108,5 @@
                         (make-exponentiation
                          (base exp) (- (exponent exp) 1)))
           (deriv (base exp) var)))
-        ;;@ $(\sin u)' = u' \cos u$
-        ((sin? exp)
-         (let ((arg (function-argument exp)))
-           (make-product
-            (make-cos arg)
-            (deriv arg var))))
-        ;;@ $(\cos u)' = -u' \sin u$
-        ((cos? exp)
-         (let ((arg (function-argument exp)))
-           (make-product
-            (make-product -1 (make-sin arg))
-            (deriv arg var))))
-        ;;@ $(\tan u)' = \frac{u'}{\cos^2 u}$
-        ((tan? exp)
-         (let ((arg (function-argument exp)))
-           (make-product
-            (deriv arg var)
-            (make-division 1 (make-exponentiation (make-cos arg) 2)))))
-        ;;@ $(\cot u)' = -\frac{u'}{\sin^2 u}$
-        ((cot? exp)
-         (let ((arg (function-argument exp)))
-         (make-product
-          (deriv arg var)
-          (make-division -1 (make-exponentiation (make-sin arg) 2)))))
         (else
          (error "Unknown expression type"))))
