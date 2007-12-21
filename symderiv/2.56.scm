@@ -65,7 +65,7 @@
 
 (define (exponent e) (caddr e))
 
-(define (function-predicate name)
+(define (function-predicate symbol)
   (lambda (expression)
     (and (pair? expression)
          (eq? (car expression) symbol))))
@@ -78,10 +78,10 @@
   (cadr expression))
 
 ;; Trigonometric functions
-(define sin? (elem-fun-predicate 'sin))
-(define cos? (elem-fun-predicate 'cos))
-(define tan? (elem-fun-predicate 'tan))
-(define cot? (elem-fun-predicate 'cot))
+(define sin? (function-predicate 'sin))
+(define cos? (function-predicate 'cos))
+(define tan? (function-predicate 'tan))
+(define cot? (function-predicate 'cot))
 
 (define make-sin (make-function 'sin))
 (define make-cos (make-function 'cos))
