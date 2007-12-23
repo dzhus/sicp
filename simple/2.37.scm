@@ -12,6 +12,9 @@
       (cons (accumulate op initial (map car seqs))
             (accumulate-n op initial (map cdr seqs)))))
 
+(define (sum list)
+  (accumulate + 0 list))
+
 (define (matrix-*-vector m v)
   (map (lambda (row) (accumulate + 0 (map * row v))) m))
 
@@ -22,7 +25,7 @@
   (let ((cols (transpose n)))
     (map (lambda (row)
            (map (lambda (col) 
-                  (accumulate + 0 (map * row col)))
+                  (sum (map * row col)))
                 cols))
          m)))
 
