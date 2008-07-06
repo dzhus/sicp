@@ -18,5 +18,11 @@
 (define (apply-generic op . args)
   (let* ((type-tags (map type-tag args))
          (proc (get op type-tags)))
-    (apply proc (map contents args))))
+    (if proc
+        (apply proc (map contents args))
+        (error "NOT IMPLEMENTED!"))))
+
+;; Shadow these definitions with a more advanced version
+(load "2.78.scm")
+  
     
