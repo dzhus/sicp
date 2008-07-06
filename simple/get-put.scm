@@ -7,11 +7,9 @@
 ;;; work with mulitple independent tables at once
 (define table '())
 
+;; Empty result should be handled properly in calling function
 (define (get operation type)
-  (let ((implementation (assoc-ref table (make-key operation type))))
-    (if implementation
-        implementation
-        (error "NOT IMPLEMENTED YET!"))))
+  (assoc-ref table (make-key operation type)))
 
 (define (put operation type implementation)
   (set! table (acons (make-key operation type) implementation

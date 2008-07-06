@@ -3,7 +3,12 @@
 
 ;;; put&get are now in separate file
 (load "get-put.scm")
-(define dispatch get)
+(define (dispatch proc dept)
+  (let ((impl (get proc dept)))
+    (if impl
+        impl
+        (error "NOT IMPLEMENTED! ASSET SOLD!"))))
+
 (define plug put)
 
 ;; Departments might make use of this function (the existence of this
@@ -116,4 +121,12 @@
   (plug 'get-salary 'russia get-salary))
 
 ;; Example:
-;; (russia-dept-package) (london-dept-package) (india-dept-package)
+;; > (russia-dept-package) (london-dept-package) (india-dept-package)
+;; > (get-salary "John" 'london)
+;; 3500
+;; > (find-employee-record "Shiram" 'russia 'india)
+;; (#f ("Shiram" (salary . 31337) (address . "--")))
+;; > (get-record "Boris" 'india)
+;; #f
+;; > (get-record "Boris" 'russia)
+;; ("Boris" . 200)

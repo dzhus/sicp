@@ -23,8 +23,10 @@
 (define (deriv exp var)
   (cond ((number? exp) 0)
         ((variable? exp) (if (same-variable? exp var) 1 0))
-        (else ((get 'deriv (operator exp))
-               (operands exp) var))))
+        (else (let ((op (get 'deriv (operator exp))))
+                (if op
+                    (op (operands exp) var)
+                    (error "DERIVATION FAILED"))))))
 ;;; Sum
 (define (make-sum a b)
   (cond ((=number? a 0) b)
@@ -52,7 +54,7 @@
 
 (define (deriv-product operands var)
   (make-sum
-   (make-product (deriv (multiplier operands) var) (multiplier operands))
+   (make-product (deriv (multiplier operands) var) (multiplicand operands))
    (make-product (multiplier operands) (deriv (multiplicand operands) var))))
 
 ;; Indefinite integral
@@ -96,3 +98,6 @@
 ;;; (put 'deriv '* deriv-product)
 ;;; (put 'deriv '∫ deriv-antideriv)
 ;;; (put 'deriv '^ deriv-expon)
+
+;;; > (deriv '(+ x y z) 'x)
+;;; 1
