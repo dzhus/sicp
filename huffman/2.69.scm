@@ -38,6 +38,6 @@
 ;; > (length message)
 ;; 36
 ;; 
-;; Using fixed-length code (3 bits per symbol (2^3=8)) would take 36×3=108 bits.
+;; Using fixed-length code (3 bits per symbol (2³=8)) would take 36×3=108 bits.
 ;;
 ;; 2.71 — 1 bit for the most frequent symbol, n-1 for the least one.
