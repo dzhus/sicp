@@ -1,5 +1,11 @@
 (use-modules (srfi srfi-1))
 
+
+;;; put&get are now in separate file
+(load "get-put.scm")
+(define dispatch get)
+(define plug put)
+
 ;; Departments might make use of this function (the existence of this
 ;; function in this file does not break layer abstraction as
 ;; departments may write their function without using `make-lookup`).
@@ -19,20 +25,6 @@
 
 
 ;;; Generic functions
-
-;; Rought `plug` and `dispatch` implementation (plain alist)
-(define dispatch-table '())
-
-(define (dispatch procedure department)
-  (let ((implementation (assoc-ref dispatch-table (cons procedure department))))
-    (if implementation
-        implementation
-        (error "NOT IMPLEMENTED YET! MANAGER FIRED!"))))
-
-(define (plug procedure department implementation)
-  (set! dispatch-table (acons (cons procedure department) implementation
-                              dispatch-table)))
-
 (define (get-record name department)
   ((dispatch 'get-record department) name))
 
@@ -122,3 +114,6 @@
   
   (plug 'get-record 'russia get-record)
   (plug 'get-salary 'russia get-salary))
+
+;; Example:
+;; (russia-dept-package) (london-dept-package) (india-dept-package)

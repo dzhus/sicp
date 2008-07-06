@@ -1,4 +1,5 @@
 (use-modules (srfi srfi-1))
+(load "get-put.scm")
 
 
 ;;; Operators
@@ -8,7 +9,6 @@
 
 (define (attach-operator operator . contents)
   (append (list operator) contents))
-
 
 
 ;;; Derivation
@@ -85,7 +85,7 @@
 (define (deriv-expon operands var)
   (make-product
    (make-product (exponent operands)
-                 (make-expon
+                 (make-exponentiation
                   (base operands) (- (exponent operands) 1)))
    (deriv (base operands) var)))
 
@@ -96,21 +96,3 @@
 ;;; (put 'deriv '* deriv-product)
 ;;; (put 'deriv '∫ deriv-antideriv)
 ;;; (put 'deriv '^ deriv-expon)
-
-
-  
-;; Dispatching table (really slow)
-(define howto '())
-
-(define (make-key operation operator)
-  (cons operation operator))
-
-(define (get operation operator)
-  (let ((implementation (assoc-ref howto (cons operation operator))))
-    (if implementation
-        implementation
-        (error "NOT IMPLEMENTED YET! LEIBNITZ GOES NASTY!"))))
-
-(define (put operation operator rule)
-  (set! howto (acons (cons operation operator) rule
-                              howto)))
