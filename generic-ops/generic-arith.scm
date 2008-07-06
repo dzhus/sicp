@@ -1,6 +1,7 @@
 ;;; Generic arithmetics package, see 2.5.1
 
 (load "ddp-shared.scm")
+(load "complex.scm")
 
 ;;; Four Horsemen of generic arithmetics
 (define (add x y) (apply-generic 'add x y))
@@ -73,7 +74,6 @@
 
 
 ;;; Complex numbers
-(load "complex.scm")
 (define (install-complex-package)
   (define make-from-real-imag 
     (get 'make-from-real-imag 'rectangular))
