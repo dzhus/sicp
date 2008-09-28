@@ -8,6 +8,7 @@
                   (type2 (cadr type-tags))
                   (a1 (car args))
                   (a2 (cadr args)))
+              ;; Here's the difference:
               (if (not (eq? type1 type2))
                   (let ((t1->t2 (get-coercion type1 type2))
                         (t2->t1 (get-coercion type2 type1)))
