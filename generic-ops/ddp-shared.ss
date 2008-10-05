@@ -1,6 +1,12 @@
-(load "../simple/get-put.scm")
+#lang scheme
 
 ;;; Few basic procedures for data-driven programming (see 2.4.2)
+
+(require "get-put.ss")
+(provide attach-tag type-tag contents
+         apply-generic)
+
+;; See also `ex2.78.ss`
 
 (define (attach-tag type-tag contents)
   (cons type-tag contents))
@@ -21,8 +27,3 @@
     (if proc
         (apply proc (map contents args))
         (error "NOT IMPLEMENTED!"))))
-
-;; Shadow these definitions with a more advanced version
-(load "2.78.scm")
-  
-    

@@ -1,8 +1,14 @@
-(load "../simple/get-put.scm")
-(load "ddp-shared.scm")
+#lang scheme
+
+(require "get-put.ss")
+(require "ddp-shared.ss")
+
+(provide real-part imag-part magnitude angle
+         make-from-real-imag
+         make-from-mag-ang)
 
 ;;; Complex numbers package, see 2.4.3
-(define (complex-rectangular-package)
+(define (install-complex-rectangular-package)
   ;; Constructors&selectors
   (define (make-from-real-imag x y) (cons x y))
   (define (real-part z) (car z))
@@ -25,7 +31,7 @@
        (lambda (x y) (tag (make-from-real-imag x y))))
   'done)
 
-(define (complex-polar-package)
+(define (install-complex-polar-package)
   (define (make-from-mag-ang mag ang) (cons mag ang))
   (define (magnitude z) (car z))
   (define (angle z) (cdr z))
@@ -44,8 +50,8 @@
        (lambda (m a) (tag (make-from-mag-ang m a))))
   'done)
 
-(complex-rectangular-package)
-(complex-polar-package)
+(install-complex-rectangular-package)
+(install-complex-polar-package)
 
 (define (real-part z) (apply-generic 'real-part z))
 (define (imag-part z) (apply-generic 'imag-part z))

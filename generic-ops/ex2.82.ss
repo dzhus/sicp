@@ -1,14 +1,22 @@
+#lang scheme
+
+(require srfi/1
+         "ddp-shared.ss")
+
+(provide apply-generic
+         put-coercion)
+
+(define (put-coercion type1 type2 coercion)
+  
+
 (define (get-coercion type1 type2)
   (if (eq? type1 type2)
       (lambda (t) t)
-      (get type1 type2)))
+      ( type1 type2)))
 
 ;; True if list does not contain any #f
 (define (non-false-list? list)
-  (if (null? list)
-      #t
-      (and (car list)
-           (non-false-list? (cdr list)))))
+  (not (any false? list)))
 
 (define (get-coercions target-type types)
   (map (lambda (type) 
@@ -21,14 +29,12 @@
     (define (coerce-args coercions)
       (map apply coercions
            (map list args)))
-    
     ;; Apply operation to coerced arguments
     (define (apply-coercing coercions)
       (let* ((coerced-args (coerce-args coercions))
              (new-type-tags (map type-tag coerced-args))
              (proc (get op new-type-tags)))
         (apply proc (map contents coerced-args))))
-    
     ;; Try to apply operation to arguments coerced to the head of
     ;; `target-types` list. If it's impossible, try the same with next
     ;; type in list.

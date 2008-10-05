@@ -1,7 +1,17 @@
+#lang scheme
+
 ;;; Generic arithmetics package, see 2.5.1
 
-(load "ddp-shared.scm")
-(load "complex.scm")
+(require "get-put.ss")
+(require "ddp-shared.ss")
+(require "complex.ss")
+
+(provide add sub mul div
+         make-integer
+         make-rational
+         make-real
+         make-complex-from-real-imag
+         make-complex-from-mag-ang)
 
 ;;; Four Horsemen of generic arithmetics
 (define (add x y) (apply-generic 'add x y))
@@ -10,25 +20,27 @@
 (define (div x y) (apply-generic 'div x y))
 
 
-;;; Scheme numbers
-(define (install-scheme-number-package)
+;;; Integer numbers
+;;;
+;;; Implementation is taken from scheme-number-package: we don't want
+;;; to take two numerical towers into account. Solution of 2.78 isn't
+;;; used, too.
+(define (install-integer-package)
   (define (tag x)
-    (attach-tag 'scheme-number x))
-  (put 'add '(scheme-number scheme-number)
+    (attach-tag 'integer x))
+  (put 'add '(integer integer)
        (lambda (x y) (tag (+ x y))))
-  (put 'sub '(scheme-number scheme-number)
+  (put 'sub '(integer integer)
        (lambda (x y) (tag (- x y))))
-  (put 'mul '(scheme-number scheme-number)
+  (put 'mul '(integer integer)
        (lambda (x y) (tag (* x y))))
-  (put 'div '(scheme-number scheme-number)
-       (lambda (x y) (tag (/ x y))))
-  (put 'make 'scheme-number tag)
+  (put 'make 'integer tag)
   'done)
 
-(install-scheme-number-package)
+(install-integer-package)
 
-(define make-scheme-number
-  (get 'make 'scheme-number))
+(define make-integer
+  (get 'make 'integer))
 
 
 ;;; Rational numbers
@@ -71,6 +83,29 @@
 
 (define make-rational
   (get 'make 'rational))
+
+
+;;; Real numbers
+;;;
+;;; Essentially a copy&paste from integers, probably macro needed
+(define (install-real-package)
+  (define (tag x)
+    (attach-tag 'real x))
+  (put 'add '(real real)
+       (lambda (x y) (tag (+ x y))))
+  (put 'sub '(real real)
+       (lambda (x y) (tag (- x y))))
+  (put 'mul '(real real)
+       (lambda (x y) (tag (* x y))))
+  (put 'div '(real real)
+       (lambda (x y) (tag (/ x y))))
+  (put 'make 'real tag)
+  'done)
+
+(install-real-package)
+
+(define make-real
+  (get 'make 'real))
 
 
 ;;; Complex numbers

@@ -1,3 +1,5 @@
+#lang scheme
+
 (define (apply-generic op . args)
   (let* ((type-tags (map type-tag args))
          (proc (get op type-tags)))
