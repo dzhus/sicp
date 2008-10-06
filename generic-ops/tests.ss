@@ -159,10 +159,19 @@
 
   (test-case
    "Simple type coercion (excercise 2.81)"
-   (put-coercion 'integer 'rational (lambda (x) (make-rational x 1)))
-   (put-coercion 'integer 'real (lambda (x) (make-real x)))
-   (put-coercion 'complex 'real (lambda (x) (make-complex-from-real-imag x 0)))
-   )
+   (put-coercion 'integer 'rational (lambda (x) (make-rational (contents x) 1)))
+   (put-coercion 'integer 'real (lambda (x) (make-real (contents x))))
+   (put-coercion 'real 'complex (lambda (x) (make-complex-from-real-imag (contents x) 0)))
+   (let ((c1 (make-integer 5))
+         (c2 (make-rational 1 8))
+         (c3 (make-real 10))
+         (c4 (make-complex-from-real-imag 0 -5)))
+     (check-equal? (2.81:apply-generic 'add c1 c2)
+                   (make-rational 41 8))
+     (check-equal? (2.81:apply-generic 'mul c1 c3)
+                   (make-real 50))
+     (check-equal? (2.81:apply-generic 'sub c4 c3)
+                   (make-complex-from-real-imag -10 -5))))
 
   (test-case
    "Advanced type coercion (excercise 2.82)"
