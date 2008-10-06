@@ -1,5 +1,16 @@
 #lang scheme
 
+;;; Simple coercion
+
+(require "get-put.ss"
+         "ddp-shared.ss"
+         "coercion-shared.ss")
+
+(provide apply-generic)
+
+;; Version of `apply-generic` which introduces very simple type
+;; coercion strategy, trying to coerce arguments of _binary_
+;; operations to each other's type
 (define (apply-generic op . args)
   (let* ((type-tags (map type-tag args))
          (proc (get op type-tags)))

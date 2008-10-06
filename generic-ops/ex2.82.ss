@@ -1,28 +1,25 @@
 #lang scheme
 
+;;; Advanced coercion
+
 (require srfi/1
-         "ddp-shared.ss")
+         "ddp-shared.ss"
+         "get-put.ss"
+         "coercion-shared.ss")
 
-(provide apply-generic
-         put-coercion)
-
-(define (put-coercion type1 type2 coercion)
-  
-
-(define (get-coercion type1 type2)
-  (if (eq? type1 type2)
-      (lambda (t) t)
-      ( type1 type2)))
+(provide apply-generic)
 
 ;; True if list does not contain any #f
 (define (non-false-list? list)
   (not (any false? list)))
 
 (define (get-coercions target-type types)
-  (map (lambda (type) 
+  (map (lambda (type)
          (get-coercion type target-type))
        types))
 
+;; This version tries to coerce all arguments to the type of the first
+;; one, then second one etc.
 (define (apply-generic op . args)
   (let ((type-tags (map type-tag args)))
     ;; Return a list of coerced arguments
@@ -46,13 +43,12 @@
             (if (non-false-list? coercions)
                 (apply-coercing coercions)
                 (try-apply-generic-coercing (cdr target-types))))))
-    
+
     (let ((proc (get op type-tags)))
       (if proc
           (apply proc (map contents args))
           (try-apply-generic-coercing type-tags)))))
-  
-
+
 ;;; Example:
 ;;
 ;; Extend complex package with some ternary operation:
