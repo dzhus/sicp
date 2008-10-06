@@ -121,8 +121,28 @@
 
   (test-case
    "Complex numbers"
-   #f)
+   (check-true #f))
+
+  (test-case
+   "=zero? predicate (excercise 2.80)"
+   (let ((numbers (list (make-integer 0)
+                        (sub (make-integer 5) (make-integer 5))
+                        (make-rational 0 10)
+                        (make-rational -0 1)
+                        (make-complex-from-real-imag 0.0 -0.0)
+                        (make-complex-from-real-imag -0.0 0e5)
+                        (make-complex-from-mag-ang 0.0 0)
+                        (make-complex-from-mag-ang 0.0 (/ pi -4)))))
+     (for-each
+      (lambda (n)
+        (check-pred =zero? n))
+      numbers)))
   
+  (test-case
+   "equ? predicate (excercise 2.79)"
+   (check-true #f)))
+
+(define-test-suite coercion
   (test-case
    "Shared coercion functions"
    (let ((coer1 (lambda (x) (make-integer x)))
@@ -139,28 +159,17 @@
 
   (test-case
    "Simple type coercion (excercise 2.81)"
-   #f)
+   (put-coercion 'integer 'rational (lambda (x) (make-rational x 1)))
+   (put-coercion 'integer 'real (lambda (x) (make-real x)))
+   (put-coercion 'complex 'real (lambda (x) (make-complex-from-real-imag x 0)))
+   )
 
   (test-case
    "Advanced type coercion (excercise 2.82)"
-   #f)
-
-  (test-case
-   "=zero? predicate (excercise 2.80)"
-   (let ((numbers (list (make-integer 0)
-                        (sub (make-integer 5) (make-integer 5))
-                        (make-rational 0 10)
-                        (make-rational -0 1)
-                        (make-complex-from-real-imag 0.0 -0.0)
-                        (make-complex-from-real-imag -0.0 0e5)
-                        (make-complex-from-mag-ang 0.0 0)
-                        (make-complex-from-mag-ang 0.0 (/ pi -4)))))
-     (for-each
-      (lambda (n)
-        (check-pred =zero? n))
-      numbers))))
+   (check-true #f)))
 
 (exit (run-tests (test-suite "All tests"
                              get-put-test
                              ddp-shared-test
-                             arithmetics)))
+                             arithmetics
+                             coercion)))
