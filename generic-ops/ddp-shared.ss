@@ -2,9 +2,7 @@
 
 ;;; Few basic procedures for data-driven programming (see 2.4.2)
 
-(require "get-put.ss")
-(provide attach-tag type-tag contents
-         apply-generic)
+(provide attach-tag type-tag contents)
 
 ;; See also `ex2.78.ss`
 
@@ -20,10 +18,3 @@
   (if (pair? datum)
       (cdr datum)
       (error "INCORRECT DATUM" datum)))
-
-(define (apply-generic op . args)
-  (let* ((type-tags (map type-tag args))
-         (proc (get op type-tags)))
-    (if proc
-        (apply proc (map contents args))
-        (error "NOT IMPLEMENTED!"))))

@@ -2,9 +2,10 @@
 
 ;;; Generic arithmetics package, see 2.5.1
 
-(require "get-put.ss")
-(require "ddp-shared.ss")
-(require "complex.ss")
+(require "get-put.ss"
+         "ddp-shared.ss"
+         "apply-generic.ss"
+         "complex.ss")
 
 (provide add sub mul div
          make-integer

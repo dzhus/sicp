@@ -1,7 +1,8 @@
 #lang scheme
 
-(require "get-put.ss")
-(require "ddp-shared.ss")
+(require "get-put.ss"
+         "ddp-shared.ss"
+         "apply-generic.ss")
 
 (provide real-part imag-part magnitude angle
          make-from-real-imag
