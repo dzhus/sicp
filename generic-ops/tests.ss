@@ -11,7 +11,10 @@
          "complex.ss"
          "generic-arith.ss"
          "ex2.79.ss"
-         "ex2.80.ss")
+         "ex2.80.ss"
+         "coercion-shared.ss"
+         (prefix-in 2.81: "ex2.81.ss")
+         (prefix-in 2.82: "ex2.82.ss"))
 
 (define epsilon 1e-8)
 
@@ -121,7 +124,25 @@
    #f)
   
   (test-case
-   "Test type coercion"
+   "Shared coercion functions"
+   (let ((coer1 (lambda (x) (make-integer x)))
+         (coer2 (lambda (x) (make-rational x 1))))
+     (put-coercion 'limbo 'integer coer1)
+     (put-coercion 'integer 'rational coer2)
+     ;; Make sure we get what we've put
+     (let ((res1 (get-coercion 'limbo 'integer))
+           (res2 (get-coercion 'integer 'rational))
+           (res3 (get 'limbo 'complex)))
+       (check-equal? coer1 res1)
+       (check-equal? coer2 res2)
+       (check-false res3))))
+
+  (test-case
+   "Simple type coercion (excercise 2.81)"
+   #f)
+
+  (test-case
+   "Advanced type coercion (excercise 2.82)"
    #f)
 
   (test-case
