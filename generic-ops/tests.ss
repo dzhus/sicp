@@ -14,7 +14,8 @@
          "ex2.80.ss"
          "coercion-shared.ss"
          (prefix-in 2.81: "ex2.81.ss")
-         (prefix-in 2.82: "ex2.82.ss"))
+         (prefix-in 2.82: "ex2.82.ss")
+         "ex2.83.ss")
 
 (define epsilon 1e-8)
 
@@ -245,9 +246,19 @@
        ;; Add integer, real and complex (coercing to latter)
        (check-equ? (2.82:apply-generic 'add c1 c2 c4)
                    (make-complex-from-mag-ang 771.5 0))))))
-  
+
+(define-test-suite tower
+  (test-case
+   "Raising"
+   (check-equ? (raise (make-integer 5)) (make-rational 10 2))
+   (check-equ? (raise (make-integer 0)) (make-rational 0 1))
+   (check-equ? (raise (make-rational 30 6)) (make-real 5.0))
+   (check-equ? (raise (make-real 13.37)) 
+               (make-complex-from-mag-ang 13.37 0))))
+
 (exit (run-tests (test-suite "All tests"
                              get-put-test
                              ddp-shared-test
                              arithmetics
-                             coercion)))
+                             coercion
+                             tower)))
