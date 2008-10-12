@@ -294,7 +294,24 @@
    (check-equ? (2.85:drop (make-rational 5 2))
                (make-rational 10 4))
    (check-equ? (2.85:drop (make-integer 9))
-               (make-integer 9))))
+               (make-integer 9)))
+
+  (test-case
+   "Simplification"
+   (check-equ? (2.85:apply-generic 'add 
+                                   (make-complex-from-real-imag 5.0 0)
+                                   (make-real 5.0))
+               (make-integer 10))
+   (check-equ? (2.85:apply-generic 'mul (make-real 17.5) (make-rational 2 5))
+               (make-integer 7))
+   (check-equ? (2.85:apply-generic 'add (make-rational 1 2) (make-real 1))
+               (make-rational 3 2))
+   (check-equ? (2.85:apply-generic 'sub (make-real 7.1) (make-real 5.1))
+               (make-integer 2))
+   (check-equ? (2.85:apply-generic 'add 
+                                   (make-complex-from-real-imag 5 1)
+                                   (make-real 5))
+               (make-complex-from-real-imag 10 1))))
 
 (exit (run-tests (test-suite "All tests"
                              get-put-test
