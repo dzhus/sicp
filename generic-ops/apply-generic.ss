@@ -12,4 +12,4 @@
          (proc (get op type-tags)))
     (if proc
         (apply proc (map contents args))
-        (error "NOT IMPLEMENTED!"))))
+        (error (format "OPERATION ~a NOT IMPLEMENTED FOR TYPES: ~a" op type-tags)))))
