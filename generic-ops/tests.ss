@@ -15,7 +15,8 @@
          "coercion-shared.ss"
          (prefix-in 2.81: "ex2.81.ss")
          (prefix-in 2.82: "ex2.82.ss")
-         "ex2.83.ss")
+         "ex2.83.ss"
+         (prefix-in 2.84: "ex2.84.ss"))
 
 (define epsilon 1e-8)
 
@@ -253,7 +254,27 @@
    (check-equ? (raise (make-integer 0)) (make-rational 0 1))
    (check-equ? (raise (make-rational 30 6)) (make-real 5.0))
    (check-equ? (raise (make-real 13.37)) 
-               (make-complex-from-mag-ang 13.37 0))))
+               (make-complex-from-mag-ang 13.37 0)))
+
+  (test-case
+   "Coercion via raising"
+   (let ((c1 (make-integer 5))
+         (c2 (make-rational 7 10))
+         (c3 (make-real 101.25))
+         (c4 (make-complex-from-real-imag 13.37 5)))
+     ;; Add integer and rational (raising to rational)
+     (check-equ? (2.84:apply-generic 'add c1 c2)
+                 (make-rational 57 10))
+     ;; Add integer, real and rational (raising to real) (relies on
+     ;; add-3-real installed few tests ago)
+     (check-equ? (2.84:apply-generic 'add c1 c2 c3)
+                 (make-real 106.95))
+     ;; Multiply integer and rational, resulting in rational
+     (check-equ? (2.84:apply-generic 'mul c1 c2)
+                 (make-rational 35 10))
+     ;; Subtract rational and complex (raising to latter)
+     (check-equ? (2.84:apply-generic 'sub c2 c4)
+                 (make-complex-from-real-imag -12.67 -5)))))
 
 (exit (run-tests (test-suite "All tests"
                              get-put-test
