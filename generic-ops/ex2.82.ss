@@ -63,23 +63,17 @@
           (apply proc (map contents args))
           (try-apply-generic-coercing type-tags)))))
 
-;;; Example:
+
+;;; Limitation:
 ;;
-;; Extend complex package with some ternary operation:
-;; > (define (complex-ternary z1 z2 z3) (make-complex-from-real-imag (+ (real-part z1) (real-part z2)) (- (imag-part z2) (imag-part z3))))
-;; > (put 'ternary '(complex complex complex) complex-ternary)
-;; > (define (ternary x y z) (apply-generic 'ternary x y z))
-;; > (define z1 (make-complex-from-real-imag 1 2))
-;; > (define z2 (make-complex-from-real-imag 3 0))
-;; > (define z3 (make-complex-from-real-imag 8 -7))
-;; > (ternary z1 z2 z3)
-;; (complex rectangular 4 . 7)
+;; Given the t_1 to t_2 coercion is installed, an attempt to apply
+;; generic operation which is defined only for t_2 to all-t_1
+;; arguments will fail!
 ;;
-;; Add a scheme-number->complex coercion:
-;; > (put 'scheme-number 'complex (lambda (x) (make-complex-from-real-imag (contents x) 0)))
+;; For example, this won't work:
 ;;
-;; Try to call ternary with mixed arguments:
-;; > (ternary z1 3 z3)
-;; (complex rectangular 4 . 7)
-;; > (ternary 1 2 z1)
-;; (complex rectangular 3 . -2)
+;; > (put-coercion 'integer 'real (lambda (x) (make-real (contents x))))
+;; > (define (add-3-reals (lambda (x y z) (make-real + x y z))))
+;; > (put 'add '(real real real) add-3-reals)
+;; > (apply-generic 'add (make-integer 1) (make-integer 2) (make-integer 3))
+;; NOT IMPLEMENTED FOR GIVEN TYPES
