@@ -153,7 +153,12 @@
   (test-case
    "Complex representations interoperability test"
    (let ((c1 (make-complex-from-real-imag 1 1))
-         (c2 (make-complex-from-mag-ang (sqrt 2) (/ pi 4))))
+         (c2 (make-complex-from-mag-ang (sqrt 2) (/ pi 4)))
+         (c3 (make-complex-from-real-imag -1 0))
+         (c4 (make-complex-from-mag-ang 1 pi)))
+     (check-equ? c1 c2)
+     (check-equ? c3 c4)
+     (check-false (equ? c1 c3))
      (for-each
       (lambda (selector)
         (check-= (selector c1) (selector c2) epsilon))
@@ -170,6 +175,7 @@
      (check-equ? c1 (div c2 c2))
      (check-equ? c3 (mul (mul c2 c2) (mul c2 c2)))
      (check-equ? c5 (add c2 c4))
+     (check-equ? c4 (sub c5 c2))
      (check-equ? c1 (div c5 c5))
      (check-equ? c1 (mul c2 c4)))))
 
@@ -206,8 +212,39 @@
 
   (test-case
    "Advanced type coercion (excercise 2.82)"
-   (check-true #f)))
-
+   (let ((add-3-real (lambda (x y z) (make-real (+ x y z))))
+         (add-3-complex (lambda (x y z) 
+                  (make-complex-from-real-imag (+ (real-part x)
+                                                  (real-part y)
+                                                  (real-part z))
+                                               0))))
+     ;; Add generic operation which is implemented only for complex
+     ;; numbers
+     (put 'add '(real real real) add-3-real)
+     (put 'add '(complex complex complex) add-3-complex)
+     ;; Install coercion operations (integer->real and real->complex
+     ;; have already been installed)
+     (put-coercion 'rational 'real
+                   (lambda (x)
+                     (make-real (/ (numer x)
+                                   (denom x)))))
+     (put-coercion 'integer 'complex 
+                   (lambda (x) 
+                     (make-complex-from-real-imag (contents x) 0)))
+     (let ((c1 (make-integer 1))
+           (c2 (make-real 757.13))
+           (c3 (make-rational 2 5))
+           (c4 (make-complex-from-mag-ang 13.37 0)))
+       ;; Add real and rational (coercing to real)
+       (check-equ? (2.82:apply-generic 'add c2 c3)
+                   (make-real 757.53))
+       ;; Add integer, real and rational (coercing to real)
+       (check-equ? (2.82:apply-generic 'add c1 c2 c3)
+                   (make-real 758.53))
+       ;; Add integer, real and complex (coercing to latter)
+       (check-equ? (2.82:apply-generic 'add c1 c2 c4)
+                   (make-complex-from-mag-ang 771.5 0))))))
+  
 (exit (run-tests (test-suite "All tests"
                              get-put-test
                              ddp-shared-test
