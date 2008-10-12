@@ -11,4 +11,3 @@
   (if (eq? type1 type2)
       (lambda (t) t)
       (get 'coerce (list type1 type2))))
-
