@@ -57,7 +57,7 @@
       numbers))))
 
 (define (all-true? list)
-  (every (lambda (t) t) list))
+  (not (any false? list)))
 
 (define-simple-check (check-equ? x y)
   (check-true (equ? x y)))
