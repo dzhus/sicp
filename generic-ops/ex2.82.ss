@@ -47,7 +47,7 @@
     ;; type in list.
     (define (try-apply-generic-coercing target-types)
       (if (null? target-types)
-          (error "NOT IMPLEMENTED FOR GIVEN TYPES")
+          (error (format "OPERATION ~a NOT IMPLEMENTED FOR TYPES: ~a" op type-tags))
           (let ((coercions (get-coercions (car target-types)
                                           type-tags)))
             (if (non-false-list? coercions)
