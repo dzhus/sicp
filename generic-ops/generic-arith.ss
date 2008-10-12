@@ -35,6 +35,8 @@
        (lambda (x y) (tag (- x y))))
   (put 'mul '(integer integer)
        (lambda (x y) (tag (* x y))))
+  (put '=zero? '(integer)
+       (lambda (x) (= x 0)))
   (put 'make 'integer tag)
   'done)
 
@@ -76,6 +78,8 @@
        (lambda (x y) (tag (mul-rat x y))))
   (put 'div '(rational rational)
        (lambda (x y) (tag (div-rat x y))))
+  (put '=zero? '(rational)
+       (lambda (x) (= (numer x) 0)))
   (put 'make 'rational
        (lambda (n d) (tag (make-rat n d))))
   'done)
@@ -100,6 +104,8 @@
        (lambda (x y) (tag (* x y))))
   (put 'div '(real real)
        (lambda (x y) (tag (/ x y))))
+  (put '=zero? '(real)
+       (lambda (x) (= x 0)))
   (put 'make 'real tag)
   'done)
 
@@ -138,6 +144,8 @@
        (lambda (x y) (tag (mul-complex x y))))
   (put 'div '(complex complex)
        (lambda (x y) (tag (div-complex x y))))
+  (put '=zero? '(complex)
+       (lambda (x) (< (magnitude x) 1e-15)))
   (put 'make-from-real-imag 'complex
        (lambda (x y) (tag (make-from-real-imag x y))))
   (put 'make-from-mag-ang 'complex
