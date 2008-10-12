@@ -8,6 +8,7 @@
          "complex.ss")
 
 (provide add sub mul div
+         numer denom
          make-integer
          make-rational
          make-real
@@ -80,6 +81,8 @@
        (lambda (x y) (tag (div-rat x y))))
   (put '=zero? '(rational)
        (lambda (x) (= (numer x) 0)))
+  (put 'numer '(rational) numer)
+  (put 'denom '(rational) denom)
   (put 'make 'rational
        (lambda (n d) (tag (make-rat n d))))
   'done)
@@ -88,6 +91,9 @@
 
 (define make-rational
   (get 'make 'rational))
+
+(define (numer r) (apply-generic 'numer r))
+(define (denom r) (apply-generic 'denom r))
 
 
 ;;; Real numbers
