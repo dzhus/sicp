@@ -40,7 +40,7 @@
   (define (real-part z)
     (* (magnitude z) (cos (angle z))))
   (define (imag-part z)
-    (* (magnitude z) (cos (angle z))))
+    (* (magnitude z) (sin (angle z))))
 
   (define (tag x) (attach-tag 'polar x))
   (put 'real-part '(polar) real-part)
