@@ -56,14 +56,18 @@
 (define (all-true? list)
   (every (lambda (t) t) list))
 
-(define-simple-check (check-generic-operations numbers operations)
+(define-simple-check (check-equ? x y)
+  (check-true (equ? x y)))
+
+;; Make sure generic operations do what's expected
+(define-simple-check (check-generic-operations constructor numbers operations)
   (all-true?
    (map (lambda (op)
           (all-true?
            (map
             (lambda (n1 n2)
-              (check-equal? (contents ((car op) n1 n2))
-                            ((cdr op) (contents n1) (contents n2))))
+              (check-equ? ((car op) (constructor n1) (constructor n2))
+                          (constructor ((cdr op) n1 n2))))
             numbers numbers)))
         operations)))
 
@@ -84,11 +88,45 @@
       k k)))
 
   (test-case
+   "=zero? predicate (excercise 2.80)"
+   (let ((numbers (list (make-integer 0)
+                        (sub (make-integer 5) (make-integer 5))
+                        (make-rational 0 10)
+                        (make-rational -0 1)
+                        (make-complex-from-real-imag 0.0 -0.0)
+                        (make-complex-from-real-imag -0.0 0e5)
+                        (make-complex-from-mag-ang -0.0 0)
+                        (make-complex-from-mag-ang 0.0 (/ pi -4)))))
+     (for-each
+      (lambda (n)
+        (check-pred =zero? n))
+      numbers)))
+  
+  (test-case
+   "equ? predicate (excercise 2.79)"
+   (check-true (equ? (make-rational 3 9)
+                     (make-rational 21 63)))
+   (check-true (equ? (make-rational 27 27)
+                     (make-rational 100000 100000)))
+   (check-true (equ? (make-integer 0)
+                     (make-integer -0)))
+   (check-false (equ? (make-integer 5)
+                      (make-integer -5)))
+   (check-true (equ? (make-real 5)
+                     (make-real 5.0)))
+   (check-false (equ? (make-real 1.7)
+                      (make-real 1.71)))
+   (let ((c1 (make-complex-from-real-imag 1 1))
+         (c2 (make-complex-from-mag-ang (sqrt 2) (/ pi 4))))
+     (check-true (equ? c1 c2))))
+
+  (test-case
    "Integers"
-   (check-generic-operations
-    (list (make-integer (random-integer 500))
-          (make-integer (- (random-integer 500) 250)))
-    (list (cons add +) (cons sub -) (cons mul *))))
+    (check-generic-operations
+     make-integer
+     (list (random-integer 500)
+           (- (random-integer 500) 250))
+     (list (cons add +) (cons sub -) (cons mul *))))
 
   (test-case
    "Rationals"
@@ -106,10 +144,12 @@
   (test-case
    "Reals"
    (check-generic-operations
-    (list (make-real (random-integer 500))
-          (make-real (- (random-integer 500) 250)))
+    make-real
+    (list (* (random-real) 500)
+          (- (* (random-real) 500))
+          (* (random-real) 123456))
     (list (cons add +) (cons sub -) (cons mul *) (cons div /))))
-  
+
   (test-case
    "Complex representations interoperability test"
    (let ((c1 (make-complex-from-real-imag 1 1))
@@ -121,26 +161,17 @@
 
   (test-case
    "Complex numbers"
-   (check-true #f))
-
-  (test-case
-   "=zero? predicate (excercise 2.80)"
-   (let ((numbers (list (make-integer 0)
-                        (sub (make-integer 5) (make-integer 5))
-                        (make-rational 0 10)
-                        (make-rational -0 1)
-                        (make-complex-from-real-imag 0.0 -0.0)
-                        (make-complex-from-real-imag -0.0 0e5)
-                        (make-complex-from-mag-ang 0.0 0)
-                        (make-complex-from-mag-ang 0.0 (/ pi -4)))))
-     (for-each
-      (lambda (n)
-        (check-pred =zero? n))
-      numbers)))
-  
-  (test-case
-   "equ? predicate (excercise 2.79)"
-   (check-true #f)))
+   (let ((c1 (make-complex-from-real-imag 1 -0))
+         (c2 (make-complex-from-real-imag (/ (sqrt 2) 2)
+                                          (/ (sqrt 2) 2)))
+         (c3 (make-complex-from-mag-ang 1 pi))
+         (c4 (make-complex-from-mag-ang 1 (* 7 (/ pi 4))))
+         (c5 (make-complex-from-mag-ang (sqrt 2) 0.0)))
+     (check-equ? c1 (div c2 c2))
+     (check-equ? c3 (mul (mul c2 c2) (mul c2 c2)))
+     (check-equ? c5 (add c2 c4))
+     (check-equ? c1 (div c5 c5))
+     (check-equ? c1 (mul c2 c4)))))
 
 (define-test-suite coercion
   (test-case
@@ -166,11 +197,11 @@
          (c2 (make-rational 1 8))
          (c3 (make-real 10))
          (c4 (make-complex-from-real-imag 0 -5)))
-     (check-equal? (2.81:apply-generic 'add c1 c2)
+     (check-equ? (2.81:apply-generic 'add c1 c2)
                    (make-rational 41 8))
-     (check-equal? (2.81:apply-generic 'mul c1 c3)
+     (check-equ? (2.81:apply-generic 'mul c1 c3)
                    (make-real 50))
-     (check-equal? (2.81:apply-generic 'sub c4 c3)
+     (check-equ? (2.81:apply-generic 'sub c4 c3)
                    (make-complex-from-real-imag -10 -5))))
 
   (test-case
