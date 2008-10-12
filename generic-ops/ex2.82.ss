@@ -31,7 +31,17 @@
       (let* ((coerced-args (coerce-args coercions))
              (new-type-tags (map type-tag coerced-args))
              (proc (get op new-type-tags)))
-        (apply proc (map contents coerced-args))))
+        (if proc
+            (apply proc (map contents coerced-args))
+            ;; Report unsuccessful application attempt (occurs when
+            ;; all arguments are coerced to single type but operation
+            ;; is not implemented for it)
+            ;;
+            ;; This leads to a limitation that generic operations must
+            ;; not return `'fail` symbol as a result. Normally
+            ;; reporting may be done using exceptions (we don't want
+            ;; to use exceptions here in SICP solutions, though)
+            'fail)))
     ;; Try to apply operation to arguments coerced to the head of
     ;; `target-types` list. If it's impossible, try the same with next
     ;; type in list.
@@ -41,9 +51,13 @@
           (let ((coercions (get-coercions (car target-types)
                                           type-tags)))
             (if (non-false-list? coercions)
-                (apply-coercing coercions)
+                (let ((result (apply-coercing coercions)))
+                  (if (eq? result 'fail)
+                      ;; Proceed to next type if coerced to wrong one
+                      (try-apply-generic-coercing (cdr target-types))
+                      result))
+                ;; Proceed to next type in case coercion failed at all
                 (try-apply-generic-coercing (cdr target-types))))))
-
     (let ((proc (get op type-tags)))
       (if proc
           (apply proc (map contents args))
