@@ -16,7 +16,8 @@
          (prefix-in 2.81: "ex2.81.ss")
          (prefix-in 2.82: "ex2.82.ss")
          "ex2.83.ss"
-         (prefix-in 2.84: "ex2.84.ss"))
+         (prefix-in 2.84: "ex2.84.ss")
+         (prefix-in 2.85: "ex2.85.ss"))
 
 (define epsilon 1e-8)
 
@@ -274,7 +275,26 @@
                  (make-rational 35 10))
      ;; Subtract rational and complex (raising to latter)
      (check-equ? (2.84:apply-generic 'sub c2 c4)
-                 (make-complex-from-real-imag -12.67 -5)))))
+                 (make-complex-from-real-imag -12.67 -5))))
+
+  (test-case
+   "Dropping"
+   (check-equ? (2.85:drop (make-complex-from-real-imag 5 0))
+               (make-integer 5))
+   (check-equ? (2.85:drop (make-complex-from-real-imag 1 1))
+               (make-complex-from-mag-ang (sqrt 2) (/ pi 4)))
+   (check-equ? (2.85:drop (make-complex-from-mag-ang 5.2 0))
+               (make-rational 52 10))
+   (check-equ? (2.85:drop (make-real 20.0))
+               (make-integer 20))
+   (check-equ? (2.85:drop (make-real 0.6))
+               (make-rational 3 5))
+   (check-false (equ? (2.85:drop (make-real pi))
+                      (make-rational 22 7)))
+   (check-equ? (2.85:drop (make-rational 5 2))
+               (make-rational 10 4))
+   (check-equ? (2.85:drop (make-integer 9))
+               (make-integer 9))))
 
 (exit (run-tests (test-suite "All tests"
                              get-put-test
