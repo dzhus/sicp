@@ -2,4 +2,5 @@ Sources in `huffman/`, `painting/`, `sets/` , `simple/` and
 `symderiv/` directories are compatible with Guile. You'll need Cairo
 bindings to make code in `painting/` work.
 
-Code in `generic-ops/` is planned to be ported under PLT umbrella.
+Code in `generic-ops/` is compatible with PLT implementation.
+SchemeUnit is used for tests.
