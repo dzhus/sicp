@@ -227,9 +227,8 @@
      ;; have already been installed)
      (put-coercion 'rational 'real
                    (lambda (x)
-                     (let ((f (contents x)))
-                       (make-real (/ (numer f)
-                                     (denom f))))))
+                     (make-real (/ (numer x)
+                                   (denom x)))))
      (put-coercion 'integer 'complex 
                    (lambda (x) 
                      (make-complex-from-real-imag (contents x) 0)))
