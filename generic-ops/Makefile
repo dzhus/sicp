@@ -4,4 +4,4 @@ TESTFILE := tests.ss
 .PHONY: check
 
 check:
-	@${SCHEME} ${TESTFILE}
+	@${SCHEME} ${TESTFILE} | sed -e 's/: */:/'
