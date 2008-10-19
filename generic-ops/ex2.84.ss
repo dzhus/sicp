@@ -44,4 +44,10 @@
          (proc (get op raised-types)))
     (if proc
         (apply proc (map contents raised-args))
-        (error (format "OPERATION ~a IS NOT IMPLEMENTED FOR TYPES: ~a" op raised-types)))))
+        ;; If top of the tower is not reached, raise all arguments and
+        ;; try again (allows operations work even if arguments are of
+        ;; type «B» and operation is defined only for type «A» (given
+        ;; «A» is higher than «B»))
+        (if (= (distance-to-top (first raised-args)) 0)
+            (error (format "OPERATION ~a IS NOT IMPLEMENTED FOR TYPES: ~a" op raised-types))
+            (apply apply-generic (append (list op) (map raise raised-args)))))))
