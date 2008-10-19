@@ -275,7 +275,15 @@
                  (make-rational 35 10))
      ;; Subtract rational and complex (raising to latter)
      (check-equ? (2.84:apply-generic 'sub c2 c4)
-                 (make-complex-from-real-imag -12.67 -5))))
+                 (make-complex-from-real-imag -12.67 -5))
+     ;; Call operation defined only for reals and complex numbers with
+     ;; integer and rational arguments (see `add-3-real` installed few
+     ;; tests ago); gives a real number as apply-generic from 2.84
+     ;; does not drop result
+     (check-equ? (2.84:apply-generic 'add c1 c1 c1)
+                 (make-real 15))
+     (check-equ? (2.84:apply-generic 'add c1 c2 c1)
+                 (make-real 10.7))))
 
   (test-case
    "Dropping"
@@ -311,7 +319,20 @@
    (check-equ? (2.85:apply-generic 'add 
                                    (make-complex-from-real-imag 5 1)
                                    (make-real 5))
-               (make-complex-from-real-imag 10 1))))
+               (make-complex-from-real-imag 10 1))
+   ;; Ternary `add` is defined for real and complex numbers only, but
+   ;; still works even with all integer and rational arguments thanks
+   ;; to `apply-generic` in 2.84
+   (check-equ? (2.85:apply-generic 'add
+                                   (make-integer 1)
+                                   (make-rational 71 100)
+                                   (make-rational 329 100))
+               (make-integer 5))
+   (check-equ? (2.85:apply-generic 'add
+                                   (make-rational -10 10)
+                                   (make-integer 1)
+                                   (make-integer 329100))
+               (make-integer 329100))))
 
 (exit (run-tests (test-suite "All tests"
                              get-put-test
