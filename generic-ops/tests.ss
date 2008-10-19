@@ -18,7 +18,8 @@
          (prefix-in 2.82: "ex2.82.ss")
          "ex2.83.ss"
          (prefix-in 2.84: "ex2.84.ss")
-         (prefix-in 2.85: "ex2.85.ss"))
+         (prefix-in 2.85: "ex2.85.ss")
+         (prefix-in 2.86: "ex2.86.ss"))
 
 (define epsilon 1e-8)
 
@@ -335,9 +336,24 @@
                                    (make-integer 329100))
                (make-integer 329100))))
 
+(define-test-suite adv-generics
+  (test-case
+   "Generic sine and cosine"
+   (check-equ? (2.86:sin (make-integer 0))
+               (make-integer 0))
+   (check-equ? (2.86:sin (make-real (/ pi 2)))
+               (make-integer 1))
+   (check-equ? (2.86:cos (make-integer 0))
+               (make-integer 1))
+   (check-equ? (2.86:cos (make-real pi))
+               (make-integer -1))
+   (check-equ? (2.86:cos (make-rational -0 4))
+               (make-integer 1))))
+
 (exit (run-tests (test-suite "All tests"
                              get-put-test
                              ddp-shared-test
                              arithmetics
                              coercion
+                             adv-generics
                              tower)))
