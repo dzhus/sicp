@@ -8,6 +8,7 @@
          "complex.ss")
 
 (provide add sub mul div
+         value
          numer denom
          make-integer
          make-rational
@@ -15,6 +16,19 @@
          make-complex-from-real-imag
          make-complex-from-mag-ang)
 
+;; Changes from version in the book:
+;;
+;; - Our ierarchy is integers, rationals, reals and complex numbers
+;;   (no «scheme-number» type)
+;;
+;; - `=zero?` predicate implemented in every package (see `ex2.80.ss`)
+;;
+;; - `value` procedure for integers and reals (see `ex2.83.ss`)
+;;
+;; - `numer` and `denom` selectors for rational numbers (needed to
+;;   implement raising)
+
+
 ;;; Four Horsemen of generic arithmetics
 (define (add x y) (apply-generic 'add x y))
 (define (sub x y) (apply-generic 'sub x y))
@@ -23,10 +37,10 @@
 
 
 ;;; Integer numbers
-;;;
-;;; Implementation is taken from scheme-number-package: we don't want
-;;; to take two numerical towers into account. Solution of 2.78 isn't
-;;; used, too.
+
+;; Implementation is taken from scheme-number-package: we don't want
+;; to take two numerical towers into account. Solution of 2.78 isn't
+;; used, too.
 (define (install-integer-package)
   (define (tag x)
     (attach-tag 'integer x))
@@ -39,6 +53,7 @@
   (put '=zero? '(integer)
        (lambda (x) (= x 0)))
   (put 'make 'integer tag)
+  (put 'value '(integer) (lambda (x) x))
   'done)
 
 (install-integer-package)
@@ -97,8 +112,9 @@
 
 
 ;;; Real numbers
-;;;
-;;; Essentially a copy&paste from integers, probably macro needed
+
+;; A copy&paste from integers actually (except for division), probably
+;; macro needed
 (define (install-real-package)
   (define (tag x)
     (attach-tag 'real x))
@@ -113,6 +129,7 @@
   (put '=zero? '(real)
        (lambda (x) (= x 0)))
   (put 'make 'real tag)
+  (put 'value '(real) (lambda (x) x))
   'done)
 
 (install-real-package)
@@ -171,3 +188,6 @@
 (put 'imag-part '(complex) imag-part)
 (put 'magnitude '(complex) magnitude)
 (put 'angle '(complex) angle)
+
+;; A `contents` wrapper for integers and reals (see `ex2.83.ss`)
+(define (value x) (apply-generic 'value x))
