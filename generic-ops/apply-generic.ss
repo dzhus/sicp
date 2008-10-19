@@ -1,6 +1,6 @@
 #lang scheme
 
-;;; Very basic non-coercing version of `apply-generic`
+;;; Standard version of `apply-generic`
 
 (require "ddp-shared.ss"
          "get-put.ss")
