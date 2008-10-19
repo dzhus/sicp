@@ -45,9 +45,9 @@
         x
         (drop projected))))
 
-;;  I could have just wrapped `apply` in `drop` in `apply-generic`,
-;; but I don't want to copy&paste the whole definition from 2.84 just
-;; to change one line, so I define a decorating macro
+;; I could have just wrapped `apply` in `drop` in `apply-generic`, but
+;; I don't want to copy&paste the whole definition from 2.84 just to
+;; change one line, so I define a decorating macro
 (define-syntax apply-generic
   (syntax-rules ()
     [(apply-generic op ...) (drop (2.84:apply-generic op ...))]))
