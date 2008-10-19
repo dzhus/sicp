@@ -84,8 +84,8 @@
                    (random-integer 1234567890))))
      (for-each
       (lambda (k1 k2)
-        (let ((c1 (make-from-real-imag k1 k2))
-              (c2 (make-from-mag-ang k1 k2)))
+        (let ((c1 (make-complex-from-real-imag k1 k2))
+              (c2 (make-complex-from-mag-ang k1 k2)))
           (check-equal? k1 (real-part c1))
           (check-equal? k2 (imag-part c1))
           (check-equal? k1 (magnitude c2))
@@ -348,7 +348,55 @@
    (check-equ? (2.86:cos (make-real pi))
                (make-integer -1))
    (check-equ? (2.86:cos (make-rational -0 4))
-               (make-integer 1))))
+               (make-integer 1)))
+
+  (test-case
+   "Generic sqrt"
+   (check-equ? (2.86:sqrt (make-integer 0))
+               (make-integer 0))
+   (check-equ? (2.86:sqrt (make-rational 1 1))
+               (make-integer 1))
+   (check-equ? (2.86:sqrt (make-rational 4 1))
+               (make-integer 2))
+   (check-equ? (2.86:sqrt (make-real 100))
+               (make-integer 10))
+   (check-equ? (2.86:sqrt (make-rational 9 49))
+               (make-rational 3 7))
+   (check-equ? (2.86:sqrt (make-real 0.25))
+               (make-rational 1 2)))
+  
+  (test-case
+   "atan"
+   (check-equ? (2.86:atan (make-integer 0) (make-integer 1))
+               (make-integer 0))))
+
+(define-test-suite adv-complex
+  (test-case
+   "Advanced complex numbers"
+   (check-equ? (add (2.86:make-complex-from-real-imag
+                     (make-rational 1 4)
+                     (make-integer 10))
+                    (2.86:make-complex-from-mag-ang
+                     (make-rational 3 4)
+                     (make-real 0)))
+               (2.86:make-complex-from-real-imag
+                (make-integer 1)
+                (make-integer 10)))
+   (check-equ? (2.86:make-complex-from-mag-ang
+                (make-real (sqrt 2))
+                (make-integer 0))
+               (2.86:make-complex-from-real-imag
+                (make-real (sqrt 2.0))
+                (make-rational -0 2)))
+   (check-equ? (mul (2.86:make-complex-from-mag-ang
+                     (make-real 5)
+                     (make-integer 5))
+                    (2.86:make-complex-from-mag-ang
+                     (make-real 7.0)
+                     (make-rational -4 2)))
+               (2.86:make-complex-from-mag-ang
+                (make-real 35.0)
+                (make-integer 3)))))
 
 (exit (run-tests (test-suite "All tests"
                              get-put-test
@@ -356,4 +404,5 @@
                              arithmetics
                              coercion
                              adv-generics
+                             adv-complex
                              tower)))
