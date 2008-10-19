@@ -6,9 +6,7 @@
          "ddp-shared.ss"
          "apply-generic.ss")
 
-(provide real-part imag-part magnitude angle
-         make-from-real-imag
-         make-from-mag-ang)
+(provide real-part imag-part magnitude angle)
 
 (define (install-complex-rectangular-package)
   ;; Constructors&selectors
@@ -59,8 +57,3 @@
 (define (imag-part z) (apply-generic 'imag-part z))
 (define (magnitude z) (apply-generic 'magnitude z))
 (define (angle z) (apply-generic 'angle z))
-
-(define make-from-real-imag
-  (get 'make-from-real-imag 'rectangular))
-(define make-from-mag-ang
-  (get 'make-from-mag-ang 'polar))
