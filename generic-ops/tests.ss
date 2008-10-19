@@ -4,8 +4,9 @@
 
 (require srfi/1 srfi/27
          (planet schematics/schemeunit:3)
-         (planet schematics/schemeunit:3/text-ui)
-         "get-put.ss"
+         (planet schematics/schemeunit:3/text-ui))
+
+(require "get-put.ss"
          "ddp-shared.ss"
          (prefix-in 2.78: "ex2.78.ss")
          "complex.ss"

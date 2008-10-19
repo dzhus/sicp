@@ -2,8 +2,9 @@
 
 ;;; Advanced coercion
 
-(require srfi/1
-         "ddp-shared.ss"
+(require srfi/1)
+
+(require "ddp-shared.ss"
          "get-put.ss"
          "coercion-shared.ss")
 
