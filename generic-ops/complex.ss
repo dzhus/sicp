@@ -1,5 +1,7 @@
 #lang scheme
 
+;;; Simple complex numbers package, see 2.4.3
+
 (require "get-put.ss"
          "ddp-shared.ss"
          "apply-generic.ss")
@@ -8,7 +10,6 @@
          make-from-real-imag
          make-from-mag-ang)
 
-;;; Complex numbers package, see 2.4.3
 (define (install-complex-rectangular-package)
   ;; Constructors&selectors
   (define (make-from-real-imag x y) (cons x y))
