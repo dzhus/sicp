@@ -23,6 +23,12 @@
 
 (define epsilon 1e-8)
 
+(define (all-true? list)
+  (not (any false? list)))
+
+(define-simple-check (check-equ? x y)
+  (check-true (equ? x y)))
+
 (define-test-suite get-put-test
   (test-case
    "Test put/get operations"
@@ -58,15 +64,9 @@
         (check-equal? n (2.78:contents n)))
       numbers))))
 
-(define (all-true? list)
-  (not (any false? list)))
-
-(define-simple-check (check-equ? x y)
-  (check-true (equ? x y)))
-
 ;; Make sure generic operations do what's expected
 ;; Works only with unary constructors:
-;; 
+;;
 ;;     (check-generic-operations
 ;;      make-real
 ;;      '(1 2 3)
@@ -115,45 +115,44 @@
       (lambda (n)
         (check-pred =zero? n))
       numbers)))
-  
+
   (test-case
    "equ? predicate (excercise 2.79)"
-   (check-true (equ? (make-rational 3 9)
-                     (make-rational 21 63)))
-   (check-true (equ? (make-rational 27 27)
-                     (make-rational 100000 100000)))
-   (check-true (equ? (make-integer 0)
-                     (make-integer -0)))
+   (check-equ? (make-rational 3 9)
+               (make-rational 21 63))
+   (check-equ? (make-rational 27 27)
+               (make-rational 100000 100000))
+   (check-equ? (make-integer 0)
+               (make-integer -0))
    (check-false (equ? (make-integer 5)
                       (make-integer -5)))
-   (check-true (equ? (make-real 5)
-                     (make-real 5.0)))
+   (check-equ? (make-real 5)
+               (make-real 5.0))
    (check-false (equ? (make-real 1.7)
                       (make-real 1.71)))
-   (let ((c1 (make-complex-from-real-imag 1 1))
-         (c2 (make-complex-from-mag-ang (sqrt 2) (/ pi 4))))
-     (check-true (equ? c1 c2))))
+   (check-equ? (make-complex-from-real-imag 1 1)
+               (make-complex-from-mag-ang (sqrt 2) (/ pi 4))))
 
   (test-case
    "Integers"
-    (check-generic-operations
-     make-integer
-     (list (random-integer 500)
-           (- (random-integer 500) 250))
-     (list (cons add +) (cons sub -) (cons mul *))))
+   (check-generic-operations
+    make-integer
+    (list (random-integer 500)
+          (- (random-integer 500) 250))
+    (list (cons add +) (cons sub -) (cons mul *))))
 
   (test-case
    "Rationals"
-   (check-equal? (sub (make-rational -1 5) (make-rational 21 6))
-                 (make-rational -37 10))
-   (check-equal? (add (make-rational -1 5) (make-rational 21 6))
-                 (make-rational 33 10))
-   (check-equal? (add (make-rational 1 3) (make-rational 1 4))
-                 (make-rational 7 12))
-   (check-equal? (add (make-rational -100 1) (make-rational 201 99))
-                 (make-rational -3233 33))
-   (check-equal? (add (make-rational -0 5) (make-rational 0 8))
-                 (make-rational 0 101)))
+   (check-equ? (sub (make-rational -1 5) (make-rational 21 6))
+               (make-rational -37 10))
+   (check-equ? (add (make-rational -1 5) (make-rational 21 6))
+               (make-rational 33 10))
+   (check-equ? (add (make-rational 1 3) (make-rational 1 4))
+               (make-rational 7 12))
+   (check-equ? (add (make-rational -100 1) (make-rational 201 99))
+               (make-rational -3233 33))
+   (check-equ? (add (make-rational -0 5) (make-rational 0 8))
+               (make-rational 0 101)))
 
   (test-case
    "Reals"
@@ -218,20 +217,20 @@
          (c3 (make-real 10))
          (c4 (make-complex-from-real-imag 0 -5)))
      (check-equ? (2.81:apply-generic 'add c1 c2)
-                   (make-rational 41 8))
+                 (make-rational 41 8))
      (check-equ? (2.81:apply-generic 'mul c1 c3)
-                   (make-real 50))
+                 (make-real 50))
      (check-equ? (2.81:apply-generic 'sub c4 c3)
-                   (make-complex-from-real-imag -10 -5))))
+                 (make-complex-from-real-imag -10 -5))))
 
   (test-case
    "Advanced type coercion (excercise 2.82)"
    (let ((add-3-real (lambda (x y z) (make-real (+ x y z))))
-         (add-3-complex (lambda (x y z) 
-                  (make-complex-from-real-imag (+ (real-part x)
-                                                  (real-part y)
-                                                  (real-part z))
-                                               0))))
+         (add-3-complex (lambda (x y z)
+                          (make-complex-from-real-imag (+ (real-part x)
+                                                          (real-part y)
+                                                          (real-part z))
+                                                       0))))
      ;; Add generic operation which is implemented only for complex
      ;; numbers
      (put 'add '(real real real) add-3-real)
@@ -242,8 +241,8 @@
                    (lambda (x)
                      (make-real (/ (numer x)
                                    (denom x)))))
-     (put-coercion 'integer 'complex 
-                   (lambda (x) 
+     (put-coercion 'integer 'complex
+                   (lambda (x)
                      (make-complex-from-real-imag (contents x) 0)))
      (let ((c1 (make-integer 1))
            (c2 (make-real 757.13))
@@ -265,7 +264,7 @@
    (check-equ? (raise (make-integer 5)) (make-rational 10 2))
    (check-equ? (raise (make-integer 0)) (make-rational 0 1))
    (check-equ? (raise (make-rational 30 6)) (make-real 5.0))
-   (check-equ? (raise (make-real 13.37)) 
+   (check-equ? (raise (make-real 13.37))
                (make-complex-from-mag-ang 13.37 0)))
 
   (test-case
@@ -317,7 +316,7 @@
 
   (test-case
    "Simplification"
-   (check-equ? (2.85:apply-generic 'add 
+   (check-equ? (2.85:apply-generic 'add
                                    (make-complex-from-real-imag 5.0 0)
                                    (make-real 5.0))
                (make-integer 10))
@@ -327,7 +326,7 @@
                (make-rational 3 2))
    (check-equ? (2.85:apply-generic 'sub (make-real 7.1) (make-real 5.1))
                (make-integer 2))
-   (check-equ? (2.85:apply-generic 'add 
+   (check-equ? (2.85:apply-generic 'add
                                    (make-complex-from-real-imag 5 1)
                                    (make-real 5))
                (make-complex-from-real-imag 10 1))
@@ -373,7 +372,7 @@
                (make-rational 3 7))
    (check-equ? (2.86:sqrt (make-real 0.25))
                (make-rational 1 2)))
-  
+
   (test-case
    "atan"
    (check-equ? (2.86:atan (make-integer 0) (make-integer 1))
