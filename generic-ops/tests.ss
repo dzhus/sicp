@@ -65,6 +65,15 @@
   (check-true (equ? x y)))
 
 ;; Make sure generic operations do what's expected
+;; Works only with unary constructors:
+;; 
+;;     (check-generic-operations
+;;      make-real
+;;      '(1 2 3)
+;;      (list (cons add +)
+;;            (cons mul *)))
+;;
+;; tests whether `(add (make-real 1) (make-real 2))` is the same as `(make-real
 (define-simple-check (check-generic-operations constructor numbers operations)
   (all-true?
    (map (lambda (op)
