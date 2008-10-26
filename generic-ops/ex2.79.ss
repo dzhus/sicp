@@ -11,5 +11,6 @@
 (define (sub x y) (apply-generic 'sub x y))
 
 ;; Note that I cannot compare two different types (see comments above)
+;; Probably I should check operand types before attempting subtraction
 (define (equ? x y)
   (=zero? (sub x y)))
