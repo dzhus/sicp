@@ -1,7 +1,8 @@
 #lang scheme
 
-(require "generic-arith.ss"
-         "apply-generic.ss")
+;;; Testing for zero
+
+(require "apply-generic.ss")
 
 (provide =zero?)
 

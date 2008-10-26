@@ -4,8 +4,7 @@
 
 (require (prefix-in std: scheme/base))
 
-(require (except-in "generic-arith.ss"
-                    add sub mul div
+(require (except-in "packages.ss"
                     make-complex-from-real-imag
                     make-complex-from-mag-ang)
          "ddp-shared.ss"

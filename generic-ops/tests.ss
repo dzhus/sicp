@@ -10,6 +10,7 @@
          "ddp-shared.ss"
          (prefix-in 2.78: "ex2.78.ss")
          "complex.ss"
+         "packages.ss"
          "generic-arith.ss"
          "ex2.79.ss"
          "ex2.80.ss"

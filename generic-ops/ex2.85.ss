@@ -2,11 +2,11 @@
 
 ;;; Dropping
 
-(require "generic-arith.ss"
+(require "packages.ss"
          "get-put.ss"
          "ddp-shared.ss"
-         "ex2.83.ss" ; raise
          "ex2.79.ss" ; equ?
+         "ex2.83.ss" ; raise
          (prefix-in 2.84: "ex2.84.ss") ; apply-generic
          "complex.ss")
 
