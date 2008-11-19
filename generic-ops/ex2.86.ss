@@ -17,9 +17,9 @@
          make-complex-from-real-imag
          make-complex-from-mag-ang)
 
-;; To implement complex numbers arbitary (integer, rational and real
-;; (complex numbers with complex parts don't seem much sense to me
-;; here)) with real and imaginary parts, following changes are needed:
+;; To implement complex numbers with arbitary (integer, rational and
+;; real (complex numbers with complex parts don't seem much sense to
+;; me here)) real and imaginary parts, following changes are needed:
 ;;
 ;; - Change all package to use our custom generic arithmetics instead
 ;;   of built-in one (`+` to `add`, `/` to `div` etc.)
