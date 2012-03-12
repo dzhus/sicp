@@ -1,5 +1,7 @@
 #lang racket
 
+(provide make-account)
+
 (define (make-account balance password)
   (define (withdraw amount)
     (if (>= balance amount)
@@ -14,5 +16,6 @@
         (cond ((eq? m 'withdraw) withdraw)
               ((eq? m 'deposit) deposit)
               (else (error "Bad request: make-account" m)))
-        (error "Bad password")))
+        ;; for ex3.7
+        'bad-password))
   dispatch)
